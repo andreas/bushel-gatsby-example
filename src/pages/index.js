@@ -1,21 +1,40 @@
 import React from "react"
-import { Link } from "gatsby"
+import { graphql, Link } from 'gatsby'
+import { Helmet } from 'react-helmet'
 
-import Layout from "../components/layout"
-import Image from "../components/image"
-import SEO from "../components/seo"
+import Layout from '../components/layout'
 
-const IndexPage = () => (
-  <Layout>
-    <SEO title="Home" />
-    <h1>Hi people</h1>
-    <p>Welcome to your new Gatsby site.</p>
-    <p>Now go build something great.</p>
-    <div style={{ maxWidth: `300px`, marginBottom: `1.45rem` }}>
-      <Image />
-    </div>
-    <Link to="/page-2/">Go to page 2</Link>
-  </Layout>
-)
+export default function Template({data, // this prop will be injected by the GraphQL query below.
+  }) {
+  const contents = data.bushel.master.tree.list_contents_recursively
 
-export default IndexPage
+  return (
+    <Layout>
+      <Helmet>
+        <body className="blog" />
+      </Helmet>
+
+        <ul>
+          {contents.map(({key, value}) => {
+      return (
+        <li><Link to={key}>{key}</Link></li>)
+    })}
+        </ul>
+    </Layout>
+  )
+}
+
+export const pageQuery = graphql`
+  {
+    bushel {
+      master {
+        tree {
+          list_contents_recursively {
+            key
+            value
+          }
+        }
+      }
+    }
+  }
+`
